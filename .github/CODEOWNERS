@@ -1,0 +1,25 @@
+# OpenMolClaw code owners.
+#
+# Required reviewers for protected paths. Enforced once "Require review from
+# Code Owners" is enabled in the `main` branch protection (see GOVERNANCE.md).
+# Public-first changes to the harness core still pass a maintainer.
+
+# Default owner for everything not matched below.
+*                               @scottmreed
+
+# Harness core — the API surface under semver (docs/versioning.md). Changes here
+# can break the downstream private consumer, so they always need owner review.
+/src/openmolclaw/harness/       @scottmreed
+/src/openmolclaw/chemistry/     @scottmreed
+/src/openmolclaw/workspace/     @scottmreed
+
+# Release, versioning, and governance surfaces.
+/pyproject.toml                 @scottmreed
+/CHANGELOG.md                   @scottmreed
+/GOVERNANCE.md                  @scottmreed
+/docs/versioning.md             @scottmreed
+/.github/                       @scottmreed
+/scripts/                       @scottmreed
+
+# Contract suite — divergence here means a behavior change; owner review required.
+/tests/contract/                @scottmreed

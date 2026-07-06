@@ -70,6 +70,25 @@ See [docs/local_install.md](docs/local_install.md) for the full CLI reference.
 3. No API keys, `.env` values, or other secrets in the diff.
 4. Contract fixture changes are coordinated with the private repo when applicable.
 
+## Releases & versioning
+
+OpenMolClaw follows [Semantic Versioning](docs/versioning.md). Because the
+private ChemIllusion product imports this package as a **pinned, released**
+dependency, semver here is load-bearing — read
+[docs/versioning.md](docs/versioning.md) before changing anything on the public
+API surface (the harness interfaces/classes, chemistry tool signatures, the
+workspace format, or the CLI/HTTP contract), and record user-visible changes in
+[CHANGELOG.md](CHANGELOG.md) under `[Unreleased]`. Releases are tag-driven and
+publish to PyPI; see [GOVERNANCE.md](GOVERNANCE.md).
+
+## Upstream-first roadmap
+
+Today the harness core is exported from a private ChemIllusion source (see the
+sync policy). As the project matures it moves to **upstream-first**: generic-core
+changes land here first and the private product consumes releases. When that
+happens more files become public-owned and the core export pipeline retires.
+[GOVERNANCE.md](GOVERNANCE.md) describes the transition and the maintainer roles.
+
 ## License
 
 By contributing, you agree that your contributions are licensed under the
