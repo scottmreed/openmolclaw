@@ -1,0 +1,7 @@
+# OpenMolClaw — local OLMo-style model via a local chat-completions endpoint.
+# Point `endpoint` at any local runtime that speaks the /v1/chat/completions API
+# (e.g. a local server on port 11434). No API key required by default.
+model:
+  provider: local
+  model: olmo
+  endpoint: http://localhost:11434/v1

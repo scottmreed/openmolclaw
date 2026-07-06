@@ -1,0 +1,24 @@
+title: "[Skill] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Discuss chemistry skill playbooks, workflows, and ideas for OpenMolClaw.
+
+        To **propose a new skill for maintainers to track**, use the [New chemistry skill](https://github.com/scottmreed/openmolclaw/issues/new?template=new-chemistry-skill.yml) issue template instead.
+        To **contribute a skill directly**, see [Adding skills](https://github.com/scottmreed/openmolclaw/blob/main/docs/adding_skills.md).
+  - type: input
+    id: topic
+    attributes:
+      label: Topic
+      description: Skill name or chemistry workflow you want to discuss
+      placeholder: e.g. retrosynthesis hints, peptide building, SMARTS patterns
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context or question
+      description: What you tried, what you need, or what you want feedback on
+    validations:
+      required: true

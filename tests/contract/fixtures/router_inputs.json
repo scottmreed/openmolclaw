@@ -1,0 +1,17 @@
+{
+  "_doc": "Shared contract fixtures. Identical bytes in both repos. Only 'plain' and 'duplicated' router shapes are contract-required (both the public package and the private agent_core parse them). Fenced-JSON parsing is a public-only extension tested in the package suite, not the contract.",
+  "cases": [
+    {
+      "name": "render_tool",
+      "content": "{\"intent\": \"action\", \"tool_name\": \"render_molecule\", \"tool_args\": {\"smiles\": \"CCO\"}, \"confidence\": 0.9}"
+    },
+    {
+      "name": "conversational",
+      "content": "{\"intent\": \"question\", \"tool_name\": \"\", \"conversational\": true}"
+    },
+    {
+      "name": "duplicated",
+      "content": "{\"tool_name\": \"convert_smiles\", \"tool_args\": {}}\n{\"tool_name\": \"convert_smiles\", \"tool_args\": {}}"
+    }
+  ]
+}

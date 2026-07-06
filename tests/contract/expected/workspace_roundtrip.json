@@ -1,0 +1,3 @@
+{
+  "two_molecules": {"objects": {"[m1]": {"type": "molecule", "smiles": "CCO"}, "[m2]": {"type": "molecule", "smiles": "c1ccccc1"}}, "metadata": {"title": "demo"}, "snapshot_version": 1}
+}

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clawd Science powered by OpenMolClaw — local chemistry harness</title>
+  <link rel="stylesheet" href="/web/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="app-header">
+    <h1>Clawd Science <span class="brand-sub">powered by OpenMolClaw</span></h1>
+    <p class="tagline">Local, open chemistry agent harness — Ketcher editor + RDKit tools.</p>
+  </header>
+
+  <main id="main" class="layout">
+    <!-- Ketcher editor (clean-room embed of the standalone Ketcher build) -->
+    <section class="panel editor-panel" aria-labelledby="editor-h">
+      <h2 id="editor-h">Editor</h2>
+      <div class="ketcher-wrap">
+        <iframe
+          id="ketcher-frame"
+          title="Ketcher molecular editor"
+          src="/web/vendor/ketcher/index.html"></iframe>
+        <p id="ketcher-missing" class="notice" hidden>
+          Ketcher is not vendored yet. See
+          <code>src/openmolclaw/web/vendor/ketcher/README.md</code> to add the
+          standalone build. The SMILES / RDKit tools below still work.
+        </p>
+      </div>
+    </section>
+
+    <!-- Conversational chat: routes through local RDKit tools + your model -->
+    <section class="panel chat-panel" aria-labelledby="chat-h">
+      <h2 id="chat-h">Chat</h2>
+      <p class="small-note">
+        Ask about a molecule or a SMILES string. The assistant uses local RDKit
+        tools (validate, render, descriptors, substructure/SMARTS search,
+        functional groups, stereochemistry) and answers with the model you
+        selected above. Nothing is sent to a ChemIllusion server.
+      </p>
+      <ol id="chat-log" class="chat-log" role="log" aria-live="polite"
+          aria-label="Chat messages"></ol>
+      <form id="chat-form" class="chat-form">
+        <label for="chat-input" class="visually-hidden">Your message</label>
+        <textarea id="chat-input" name="message" rows="2" autocomplete="off"
+          placeholder="e.g. What functional groups are in aspirin, CC(=O)Oc1ccccc1C(=O)O?"></textarea>
+        <div class="row chat-actions">
+          <button type="submit" id="chat-send">Send</button>
+          <button type="button" id="chat-clear" class="btn-secondary">Clear</button>
+          <span id="chat-status" class="status" role="status" aria-live="polite"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- Tool + chat panel -->
+    <section class="panel tools-panel" aria-labelledby="tools-h">
+      <h2 id="tools-h">Tools</h2>
+
+      <form id="model-form" class="tool-row">
+        <label for="model-select">Model</label>
+        <div class="row">
+          <select id="model-select" name="model"></select>
+          <button type="submit">Use</button>
+        </div>
+        <p id="model-note" class="small-note"></p>
+      </form>
+
+      <form id="smiles-form" class="tool-row">
+        <label for="smiles-input">Load SMILES into editor</label>
+        <div class="row">
+          <input id="smiles-input" name="smiles" type="text" inputmode="latin"
+                 placeholder="e.g. CC(=O)Oc1ccccc1C(=O)O" autocomplete="off" />
+          <button type="submit">Load</button>
+        </div>
+      </form>
+
+      <div class="tool-row">
+        <button id="read-structure" type="button">Read structure → SMILES</button>
+        <button id="render-structure" type="button">Render current → workspace</button>
+      </div>
+
+      <div class="tool-row">
+        <span id="status" class="status" role="status" aria-live="polite"></span>
+      </div>
+
+      <form id="rdkit-agent-form" class="tool-row rdkit-agent-tools">
+        <h3>Optional rdkit-agent workflows</h3>
+        <p class="small-note">
+          These actions ask the AI to prepare an rdkit-agent tool call through
+          the chat panel above. OpenMolClaw does not execute the CLI. See
+          <a href="https://github.com/scottmreed/rdkit-agent" target="_blank" rel="noopener noreferrer">rdkit-agent on GitHub</a>.
+        </p>
+        <label for="rdkit-agent-workflow">Workflow</label>
+        <select id="rdkit-agent-workflow" name="workflow">
+          <option value="similarity">Similarity search</option>
+          <option value="atom-map">Atom mapping</option>
+          <option value="balance">Reaction balance check</option>
+          <option value="fingerprint">Fingerprint generation</option>
+        </select>
+        <label for="rdkit-agent-input">Input</label>
+        <textarea id="rdkit-agent-input" name="input" rows="3"
+          placeholder="Enter SMILES, reaction notation, or a molecule list"></textarea>
+        <button type="submit">Ask AI to prepare rdkit-agent call</button>
+      </form>
+
+      <h3>Rendered preview</h3>
+      <div id="preview" class="preview" aria-live="polite"></div>
+    </section>
+
+    <!-- Privacy posture (ZDR routing + local workspace persistence) -->
+    <section class="panel privacy-panel" aria-labelledby="privacy-h">
+      <h2 id="privacy-h">Privacy</h2>
+      <p id="privacy-summary" class="status" role="status" aria-live="polite">Loading privacy status…</p>
+      <div class="tool-row">
+        <label class="check">
+          <input id="zdr-toggle" type="checkbox" />
+          Require OpenRouter ZDR (Zero Data Retention) routing for this session
+        </label>
+        <label class="check">
+          <input id="memory-only-toggle" type="checkbox" />
+          Do not save workspace to disk for this session
+        </label>
+        <label class="check">
+          <input id="private-structure-mode-toggle" type="checkbox" />
+          Private Structure Mode (ZDR + block external lookups + memory-only)
+        </label>
+      </div>
+      <p id="private-structure-mode-claim" class="notice notice--success" aria-live="polite" hidden></p>
+      <p id="privacy-warning" class="notice notice--warning" aria-live="polite"></p>
+      <p class="small-note">
+        <strong>Zero Data Retention (ZDR)</strong> is OpenRouter's routing option that
+        restricts a request to endpoints that have committed not to retain or train on
+        it. ZDR Mode only affects requests this local app sends to OpenRouter — it does
+        not change your OpenRouter account settings, OS logs, browser extensions,
+        proxies, custom providers, or local workspace files.
+        <strong>Private Structure Mode</strong> combines ZDR (when a hosted provider is
+        used), blocked external molecule lookups, and a memory-only workspace into one
+        toggle; see <a href="/docs">/docs</a> for the exact claim it earns.
+      </p>
+    </section>
+
+    <!-- Object list + execution trace -->
+    <section class="panel workspace-panel" aria-labelledby="ws-h">
+      <h2 id="ws-h">Workspace</h2>
+      <ul id="object-list" class="object-list" aria-label="Workspace objects"></ul>
+
+      <h3>Execution trace</h3>
+      <ol id="trace" class="trace" aria-live="polite"></ol>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>
+      Clawd Science (powered by OpenMolClaw) is maintained by the
+      <a href="https://chemillusion.com" target="_blank" rel="noopener noreferrer">ChemIllusion</a>
+      team. The hosted product adds an authored curriculum and classroom features.
+    </p>
+  </footer>
+
+  <script src="/web/app.js"></script>
+  <script src="/web/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+OpenMolClaw
+Copyright 2026 ChemIllusion (Scott Reed)
+
+This product is built and maintained by the team behind ChemIllusion
+(https://chemillusion.com), a hosted chemistry-visualization and teaching
+platform. OpenMolClaw is the open, local-first core.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this product except in compliance with the License. A copy of the License is
+provided in the LICENSE file and at http://www.apache.org/licenses/LICENSE-2.0.
+
+--------------------------------------------------------------------------------
+Third-party components
+--------------------------------------------------------------------------------
+
+This product relies on the following open-source projects, each under its own
+license:
+
+  * RDKit — BSD 3-Clause License (https://github.com/rdkit/rdkit)
+  * Ketcher — Apache License 2.0 (https://github.com/epam/ketcher)
+  * Flask — BSD 3-Clause License (https://github.com/pallets/flask)
+
+These components are the property of their respective owners and are used in
+accordance with their licenses.

@@ -1,0 +1,4 @@
+{
+  "minimal": {"intent": "action", "tool_name": "validate_smiles", "tool_args": {}, "conversational": false, "confidence": 0.0},
+  "with_args": {"intent": "action", "tool_name": "render_molecule", "tool_args": {"smiles": "c1ccccc1"}, "conversational": false, "confidence": 0.75}
+}

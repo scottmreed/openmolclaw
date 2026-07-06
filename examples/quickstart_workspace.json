@@ -1,0 +1,9 @@
+{
+  "snapshot_version": 1,
+  "workspace_id": "quickstart",
+  "objects": {
+    "[m1]": {"type": "molecule", "smiles": "CC(=O)Oc1ccccc1C(=O)O", "name": "aspirin"},
+    "[m2]": {"type": "molecule", "smiles": "CN1C=NC2=C1C(=O)N(C(=O)N2C)C", "name": "caffeine"}
+  },
+  "metadata": {"title": "Quickstart workspace", "note": "Load with the local JSON workspace store."}
+}

@@ -1,0 +1,10 @@
+# OpenMolClaw remote local-provider example.
+#
+# Point endpoint at a model server reachable from the VM or compute node.
+model:
+  provider: local
+  model: lab-local-model
+  endpoint: http://127.0.0.1:11434/v1
+
+workspace:
+  save_mode: memory_only

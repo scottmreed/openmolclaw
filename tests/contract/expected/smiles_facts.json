@@ -1,0 +1,5 @@
+{
+  "ethanol": {"canonical": "CCO", "inchikey": "LFQSCWFLJHTTHZ-UHFFFAOYSA-N"},
+  "benzene": {"canonical": "c1ccccc1", "inchikey": "UHOVQNZJYSORNB-UHFFFAOYSA-N"},
+  "acetic_acid": {"canonical": "CC(=O)O", "inchikey": "QTBSBXVTEAMEQO-UHFFFAOYSA-N"}
+}

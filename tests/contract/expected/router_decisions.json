@@ -1,0 +1,5 @@
+{
+  "render_tool": {"intent": "action", "tool_name": "render_molecule", "tool_args": {"smiles": "CCO"}, "conversational": false},
+  "conversational": {"intent": "question", "tool_name": "", "tool_args": {}, "conversational": true},
+  "duplicated": {"intent": "action", "tool_name": "convert_smiles", "tool_args": {}, "conversational": false}
+}

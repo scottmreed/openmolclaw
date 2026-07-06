@@ -1,0 +1,4 @@
+# Do not commit the vendored Apache-2.0 Ketcher build; fetch it locally.
+*
+!.gitignore
+!README.md

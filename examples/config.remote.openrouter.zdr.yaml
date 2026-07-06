@@ -1,0 +1,19 @@
+# OpenMolClaw remote OpenRouter ZDR example.
+#
+# Set the key in the environment or in the platform's secret manager:
+#   export OPENROUTER_API_KEY=...
+model:
+  provider: openrouter
+  model: google/gemma-4-26b-a4b-it
+  base_url: https://openrouter.ai/api/v1
+  require_tool_support: true
+  preflight: false
+  privacy:
+    openrouter_zdr: true
+    deny_data_collection: true
+    allow_fallbacks: false
+    require_parameters: true
+    private_structure_mode: true
+
+workspace:
+  save_mode: memory_only

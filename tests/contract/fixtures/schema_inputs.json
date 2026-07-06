@@ -1,0 +1,6 @@
+{
+  "cases": [
+    {"name": "minimal", "payload": {"intent": "action", "tool_name": "validate_smiles"}},
+    {"name": "with_args", "payload": {"intent": "action", "tool_name": "render_molecule", "tool_args": {"smiles": "c1ccccc1"}, "confidence": 0.75}}
+  ]
+}

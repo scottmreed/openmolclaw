@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OpenMolClaw — demo storyboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%; background: #eef2f6; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  #stage-wrap {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  }
+  #stage {
+    width: 1280px; height: 800px; position: relative; background: #eef2f6;
+    overflow: hidden; border-radius: 8px;
+  }
+  .scene {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 28px;
+  }
+  .caption {
+    font-size: 30px; font-weight: 600; color: #0f172a; text-align: center;
+    max-width: 900px; line-height: 1.35;
+  }
+  .caption .accent { color: #0d9488; }
+  .card {
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    overflow: hidden; display: flex; align-items: center; justify-content: center;
+  }
+  .card img { display: block; max-width: 100%; max-height: 100%; }
+  #card-editor { width: 560px; height: 560px; padding: 18px; }
+  #card-editor img { width: 100%; height: 100%; object-fit: contain; }
+  #card-chat-full { width: 900px; height: 480px; padding: 0; }
+  #card-chat-full img { width: 100%; height: 100%; object-fit: contain; }
+
+  /* Recreated "typing" bubble for Scene 2 — matches the app's own bubble styling */
+  .typing-card {
+    width: 820px; min-height: 210px; padding: 28px 32px; text-align: left;
+  }
+  .typing-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #64748b;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .typing-bubble {
+    background: #dbeafe; color: #1e3a8a; border-radius: 10px;
+    padding: 16px 20px; font-size: 22px; line-height: 1.45; min-height: 64px;
+  }
+  .cursor {
+    display: inline-block; width: 2px; height: 22px; background: #1e3a8a;
+    margin-left: 2px; vertical-align: middle;
+  }
+
+  #footer {
+    position: absolute; left: 28px; bottom: 22px; font-size: 15px; color: #64748b;
+    display: flex; align-items: center; gap: 8px;
+  }
+  #footer .dot { width: 8px; height: 8px; border-radius: 50%; background: #0d9488; }
+
+  #controls {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+    padding: 12px 20px 15px; background: rgba(15, 23, 42, 0.92);
+    display: flex; align-items: center; gap: 14px;
+  }
+  #controls button {
+    padding: 8px 16px; border-radius: 6px; border: none;
+    background: #0d9488; color: #fff; font-weight: 600; cursor: pointer; font-size: 15px;
+  }
+  #controls input[type="range"] { flex: 1; height: 6px; }
+  #controls span { color: #fff; font-size: 13px; font-family: monospace; min-width: 100px; }
+</style>
+</head>
+<body>
+  <div id="stage-wrap">
+    <div id="stage">
+      <div class="scene" id="scene-1">
+        <div class="caption">Draw or paste a molecule in <span class="accent">Ketcher</span></div>
+        <div class="card" id="card-editor"><img src="../openmolclaw-editor.png" alt="Ketcher editor with aspirin drawn"></div>
+      </div>
+
+      <div class="scene" id="scene-2">
+        <div class="caption">Ask the chat <span class="accent">what it sees</span></div>
+        <div class="card typing-card">
+          <div class="typing-label">You</div>
+          <div class="typing-bubble"><span id="typed-text"></span><span class="cursor" id="type-cursor"></span></div>
+        </div>
+      </div>
+
+      <div class="scene" id="scene-3">
+        <div class="caption">Get an answer from <span class="accent">local RDKit tools</span> — nothing leaves your machine</div>
+        <div class="card" id="card-chat-full"><img src="../openmolclaw-chat.png" alt="OpenMolClaw chat answering an aspirin functional-groups question"></div>
+      </div>
+
+      <div id="footer"><span class="dot"></span>OpenMolClaw — local-first chemistry agent</div>
+    </div>
+  </div>
+
+  <div id="controls" data-export-hide>
+    <button id="playBtn" type="button">▶ Play</button>
+    <input id="scrub" type="range" min="0" max="13.2" step="0.05" value="0">
+    <span id="timeLabel">0.0s / 13.2s</span>
+  </div>
+
+  <script>
+    var TOTAL = 13.2;
+    var QUESTION = "What functional groups are in aspirin, CC(=O)Oc1ccccc1C(=O)O?";
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+    function prog(t, s, e) { return clamp((t - s) / (e - s), 0, 1); }
+    function easeOut(u) { return 1 - Math.pow(1 - u, 3); }
+    function lerp(a, b, u) { return a + (b - a) * u; }
+    // fades in over 0.5s, holds, fades out over 0.5s within [start, end]
+    function sceneGate(t, start, end) {
+      return prog(t, start, start + 0.5) * (1 - prog(t, end - 0.5, end));
+    }
+    // fades in and stays (no fade-out) — used for the final scene
+    function sceneGateHold(t, start) {
+      return prog(t, start, start + 0.5);
+    }
+
+    var scene1 = document.getElementById('scene-1');
+    var scene2 = document.getElementById('scene-2');
+    var scene3 = document.getElementById('scene-3');
+    var editorCard = document.getElementById('card-editor');
+    var typedText = document.getElementById('typed-text');
+    var typeCursor = document.getElementById('type-cursor');
+    var chatCard = document.getElementById('card-chat-full');
+
+    var S1_START = 0, S1_END = 4.2;
+    var S2_START = 3.8, S2_END = 8.0;
+    var S3_START = 7.6;
+    var TYPE_START = 4.6, TYPE_END = 6.6;
+
+    function render(t) {
+      var o1 = sceneGate(t, S1_START, S1_END);
+      scene1.style.opacity = o1;
+      scene1.style.pointerEvents = 'none';
+      var editorScale = lerp(1.05, 1.0, easeOut(prog(t, S1_START + 0.1, S1_START + 0.9)));
+      editorCard.style.transform = 'scale(' + editorScale + ')';
+
+      var o2 = sceneGate(t, S2_START, S2_END);
+      scene2.style.opacity = o2;
+      scene2.style.pointerEvents = 'none';
+      var typeP = prog(t, TYPE_START, TYPE_END);
+      var chars = Math.round(QUESTION.length * typeP);
+      typedText.textContent = QUESTION.slice(0, chars);
+      typeCursor.style.opacity = (typeP >= 1) ? (Math.floor(t * 2) % 2 === 0 ? 1 : 0) : 1;
+
+      var o3 = sceneGateHold(t, S3_START);
+      scene3.style.opacity = o3;
+      var chatScale = lerp(0.97, 1.0, easeOut(prog(t, S3_START, S3_START + 0.8)));
+      chatCard.style.transform = 'scale(' + chatScale + ')';
+    }
+
+    window.setGlobalTime = function (t) {
+      time = clamp(t, 0, TOTAL);
+      render(time);
+      document.getElementById('scrub').value = time;
+      document.getElementById('timeLabel').textContent = time.toFixed(1) + 's / ' + TOTAL + 's';
+    };
+    window.VIDEO_TOTAL = TOTAL;
+
+    var time = 0;
+    var playing = false;
+    var lastFrame = null;
+
+    function tick(ts) {
+      if (!playing) return;
+      if (lastFrame === null) lastFrame = ts;
+      var dt = (ts - lastFrame) / 1000;
+      lastFrame = ts;
+      var next = time + dt;
+      if (next >= TOTAL) {
+        next = 0;
+      }
+      window.setGlobalTime(next);
+      requestAnimationFrame(tick);
+    }
+
+    document.getElementById('playBtn').addEventListener('click', function () {
+      playing = !playing;
+      this.textContent = playing ? '⏸ Pause' : '▶ Play';
+      if (playing) { lastFrame = null; requestAnimationFrame(tick); }
+    });
+    document.getElementById('scrub').addEventListener('input', function (e) {
+      window.setGlobalTime(parseFloat(e.target.value));
+    });
+
+    render(0);
+  </script>
+</body>
+</html>

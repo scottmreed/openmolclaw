@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Chemistry skills (Discussions)
+    url: https://github.com/scottmreed/openmolclaw/discussions/categories/chemistry-skills
+    about: Share skill ideas, ask how to write a playbook, or compare workflows
+  - name: Model providers (Discussions)
+    url: https://github.com/scottmreed/openmolclaw/discussions/categories/model-providers
+    about: Local vs hosted endpoints, OpenRouter ZDR, and open-weight model choices

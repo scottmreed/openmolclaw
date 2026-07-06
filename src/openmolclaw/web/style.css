@@ -1,0 +1,290 @@
+/*
+ * OpenMolClaw local UI styles.
+ *
+ * Accessibility (WCAG 2.2 AA): visible skip link, visible keyboard focus, and
+ * body/UI text contrast >= 4.5:1 against its background. Palette is slate +
+ * teal + amber — deliberately no purple.
+ */
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --ink: #1b2430;          /* on --surface: ~13:1 */
+  --ink-soft: #45535f;     /* on --surface: ~7.5:1 */
+  --line: #cbd5e0;
+  --accent: #0f6d84;       /* teal; on white ~5.3:1 */
+  --accent-ink: #ffffff;
+  --focus: #b45309;        /* amber-700 focus ring */
+  --error: #a12020;        /* on white ~6.4:1 */
+  --alias: #0b5c46;        /* deep green */
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--ink);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  z-index: 10;
+}
+.skip-link:focus { left: 0.5rem; top: 0.5rem; }
+
+a { color: var(--accent); }
+
+.app-header {
+  padding: 1rem 5%;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.app-header h1 { margin: 0; font-size: 1.5rem; }
+.brand-sub { font-size: 0.85rem; font-weight: 400; color: var(--ink-soft); }
+.tagline { margin: 0.25rem 0 0; color: var(--ink-soft); }
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 5%;
+  align-items: start;
+}
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+}
+.panel h2 { margin-top: 0; font-size: 1.15rem; }
+.panel h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+
+.ketcher-wrap { position: relative; }
+#ketcher-frame {
+  width: 100%;
+  height: 460px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.tool-row { margin-bottom: 0.9rem; }
+.row { display: flex; gap: 0.5rem; }
+label { display: block; font-weight: 600; margin-bottom: 0.3rem; }
+
+input[type="text"],
+select {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 1rem;
+  min-width: 0;
+}
+
+.small-note {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  margin: 0.3rem 0 0;
+}
+
+button {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+button:hover { background: #0c5a6e; }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.status { display: inline-block; color: var(--ink-soft); }
+.status--error { color: var(--error); font-weight: 600; }
+
+.notice {
+  background: #fff8ec;
+  border: 1px solid #e6c67a;
+  color: #5c4408;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.preview svg { max-width: 100%; height: auto; }
+
+.object-list, .trace { padding-left: 1.1rem; margin: 0; }
+.object-list { list-style: none; padding-left: 0; }
+.object-list li {
+  border-bottom: 1px solid var(--line);
+  padding: 0.35rem 0;
+  display: flex;
+  gap: 0.5rem;
+}
+.alias { font-weight: 700; color: var(--alias); }
+.smiles { color: var(--ink-soft); font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+.trace li { color: var(--ink-soft); font-size: 0.9rem; }
+
+.app-footer {
+  padding: 1rem 5%;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+
+/* --- Privacy panel (ZDR + local workspace persistence) ------------------- */
+.privacy-panel { border-left: 4px solid var(--accent); }
+.privacy-panel .check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.35rem 0;
+  color: var(--ink);
+}
+.privacy-panel .check input { margin-top: 0.2rem; }
+.notice--warning { font-weight: 600; }
+.notice--success {
+  background: #eafaf1;
+  border: 1px solid #7ac9a0;
+  color: #0f4a30;
+  font-weight: 600;
+}
+.badge-zdr-on { font-weight: 700; color: var(--alias); }
+
+/* --- Chat panel --------------------------------------------------------- */
+/* Spans the full grid width so the conversation has room to breathe. */
+.chat-panel { grid-column: 1 / -1; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.chat-log {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0.5rem;
+  max-height: 420px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fbfcfd;
+}
+.chat-log:empty { display: none; }
+
+.chat-msg {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  max-width: 90%;
+}
+.chat-msg--user {
+  background: #e3f0f3;          /* pale teal; ink on it ~11:1 */
+  border: 1px solid #b9d9e0;
+  margin-left: auto;
+}
+.chat-msg--assistant {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  margin-right: auto;
+}
+.chat-role {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  margin-bottom: 0.15rem;
+}
+.chat-body { white-space: pre-wrap; color: var(--ink); }
+
+.chat-form textarea {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  resize: vertical;
+  min-height: 2.5rem;
+}
+.chat-actions { align-items: center; margin-top: 0.5rem; }
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+.btn-secondary:hover { background: #eef6f8; }
+
+.chat-trace {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.chat-trace summary { cursor: pointer; }
+.chat-trace-list { margin: 0.3rem 0 0; padding-left: 1.1rem; }
+
+.chat-structure {
+  margin: 0.4rem 0;
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.chat-structure-head { display: flex; gap: 0.5rem; margin-bottom: 0.35rem; }
+.chat-structure-svg svg { max-width: 100%; height: auto; }
+.chat-structure .btn-secondary { margin-top: 0.4rem; }
+
+/* --- Optional rdkit-agent deferred workflows ----------------------------- */
+.rdkit-agent-tools textarea {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  resize: vertical;
+  min-height: 3.5rem;
+}
+.rdkit-agent-tools select { width: 100%; margin-bottom: 0.5rem; }
+.rdkit-agent-tools button { margin-top: 0.4rem; }
+
+.chat-deferred-card {
+  margin: 0.4rem 0;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: #f2f9fb;
+}
+.chat-deferred-head { font-weight: 700; margin-bottom: 0.3rem; }
+.chat-deferred-cli {
+  background: rgba(15, 109, 132, 0.08);
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  margin: 0.3rem 0;
+}
+.chat-deferred-notes { color: var(--ink-soft); font-size: 0.82rem; margin: 0.3rem 0 0; }

@@ -1,0 +1,64 @@
+name: New chemistry skill
+description: Propose a new Markdown skill playbook for OpenMolClaw
+title: "[Skill] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a chemistry skill.
+
+        - **New skills** live under `src/openmolclaw/skills/<name>/SKILL.md` and are **public-owned** — open a PR when ready.
+        - **Synced skills** (files with a `SYNCED FILE` header) are **patch proposals** only; see [sync policy](https://github.com/scottmreed/openmolclaw/blob/main/docs/sync_policy.md).
+
+        See also [Adding skills](https://github.com/scottmreed/openmolclaw/blob/main/docs/adding_skills.md).
+  - type: input
+    id: skill-name
+    attributes:
+      label: Skill name
+      description: Directory name under `src/openmolclaw/skills/` (kebab-case)
+      placeholder: peptide-building
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: When should the agent use this skill?
+      description: One or two sentences — the opening "when to use" guidance for the playbook
+    validations:
+      required: true
+  - type: dropdown
+    id: contribution-type
+    attributes:
+      label: What are you proposing?
+      options:
+        - Skill playbook only (SKILL.md)
+        - Skill playbook plus new callable tool(s)
+        - Extension of an existing synced skill (patch proposal)
+    validations:
+      required: true
+  - type: textarea
+    id: tools
+    attributes:
+      label: Tools or APIs involved
+      description: Existing built-in tools, or new handlers you would add in `builtin_tools.py`
+      placeholder: validate_smiles, render_molecule, molecular_descriptors, ...
+  - type: textarea
+    id: example
+    attributes:
+      label: Example user prompt and expected workflow
+      description: A short worked example the skill should guide the model through
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Contributor checklist
+      options:
+        - label: I read docs/adding_skills.md
+          required: true
+        - label: I understand public-owned vs synced files (docs/sync_policy.md)
+          required: true
+        - label: The playbook stays local-first (no proprietary vendor lock-in)
+          required: true

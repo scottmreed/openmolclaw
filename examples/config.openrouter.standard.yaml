@@ -1,0 +1,23 @@
+# OpenMolClaw — standard OpenRouter config (ZDR routing OFF).
+#
+# ZDR Mode is opt-in because requiring ZDR endpoints can reduce model/provider
+# availability. Even with ZDR off, OpenMolClaw keeps privacy-forward defaults:
+# provider data collection is denied and provider fallbacks are disabled unless
+# you opt back in. Flip openrouter_zdr to true (or use config.openrouter.zdr.yaml)
+# to require Zero Data Retention endpoints.
+#
+# Set the key in your environment (never commit it):
+#   export OPENROUTER_API_KEY=...
+model:
+  provider: openrouter
+  model: allenai/olmo-2-0325-32b-instruct
+  base_url: https://openrouter.ai/api/v1
+  require_tool_support: true
+  privacy:
+    openrouter_zdr: false
+    deny_data_collection: true
+    allow_fallbacks: false
+    require_parameters: true
+
+workspace:
+  save_mode: local_json

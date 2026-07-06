@@ -1,0 +1,7 @@
+{
+  "cases": [
+    {"name": "ethanol", "smiles": "OCC"},
+    {"name": "benzene", "smiles": "C1=CC=CC=C1"},
+    {"name": "acetic_acid", "smiles": "CC(=O)O"}
+  ]
+}

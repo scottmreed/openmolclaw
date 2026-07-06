@@ -1,0 +1,32 @@
+title: "[Provider] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Discuss local inference, OpenRouter, ZDR routing, and open-weight model choices for OpenMolClaw.
+
+        Configuration reference: [docs/model_providers.md](https://github.com/scottmreed/openmolclaw/blob/main/docs/model_providers.md).
+        Privacy and ZDR details: [docs/zdr.md](https://github.com/scottmreed/openmolclaw/blob/main/docs/zdr.md).
+  - type: dropdown
+    id: provider-type
+    attributes:
+      label: Provider type
+      options:
+        - Local (Ollama, vLLM, llama.cpp, etc.)
+        - OpenRouter
+        - Other chat-completions endpoint
+        - Choosing a model / benchmark results
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Model or endpoint (if applicable)
+      placeholder: e.g. google/gemma-4-26b-a4b-it, http://localhost:11434/v1
+  - type: textarea
+    id: question
+    attributes:
+      label: Question or experience
+      description: What you configured, what happened, and what you expected
+    validations:
+      required: true

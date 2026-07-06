@@ -1,0 +1,108 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openmolclaw"
+dynamic = ["version"]
+description = "An open, local-first chemistry agent harness for Ketcher, RDKit, and model-driven skills — from the team behind ChemIllusion."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+keywords = [
+  "chemistry",
+  "rdkit",
+  "ketcher",
+  "agent",
+  "smiles",
+  "cheminformatics",
+  "llm",
+  "tool-calling",
+]
+
+authors = [
+  { name = "The ChemIllusion team", email = "support@chemillusion.com" },
+]
+maintainers = [
+  { name = "ChemIllusion", email = "support@chemillusion.com" },
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Education",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Chemistry",
+  "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+
+# Runtime dependencies. Pydantic is required at import time by
+# ``openmolclaw.harness.schemas`` (the router/executor envelopes) — it was
+# missing from the 0.0.1 metadata, which would have produced an ImportError on a
+# clean install. RDKit provides all deterministic chemistry; Flask powers the
+# local app; requests is used only by the network-touching provider/lookup
+# paths (never at import time).
+dependencies = [
+  "rdkit>=2023.9",
+  "flask>=3.0",
+  "pydantic>=2.0",
+  "pyyaml>=6.0",
+  "requests>=2.31",
+]
+
+[project.optional-dependencies]
+# Test + local dev.
+dev = [
+  "pytest>=8.0",
+]
+# Everything needed to build and check a distribution for PyPI.
+build = [
+  "build>=1.2",
+  "twine>=5.0",
+]
+
+[project.urls]
+Homepage = "https://chemillusion.com"
+Repository = "https://github.com/scottmreed/openmolclaw"
+Documentation = "https://github.com/scottmreed/openmolclaw/tree/main/docs"
+"Hosted product" = "https://chemillusion.com"
+"Issue tracker" = "https://github.com/scottmreed/openmolclaw/issues"
+
+[project.scripts]
+openmolclaw = "openmolclaw.__main__:main"
+
+# ---------------------------------------------------------------------------
+# Packaging — src/ layout with real package data.
+# ---------------------------------------------------------------------------
+# The single source of truth for the version is ``openmolclaw.__version__``;
+# the metadata reads it dynamically so the two can never drift.
+[tool.setuptools.dynamic]
+version = { attr = "openmolclaw.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["openmolclaw*"]
+
+# Non-Python assets that MUST ship inside the wheel so an installed package is
+# self-contained (``openmolclaw serve`` and ``run-contracts`` work from any
+# working directory, not just a source checkout):
+#   * web/**        — the local Flask + Ketcher UI
+#   * skills/**     — filesystem skill definitions
+#   * contracts/data/** — contract fixtures + expected outputs
+[tool.setuptools.package-data]
+openmolclaw = [
+  "web/*",
+  "web/**/*",
+  "skills/**/*",
+  "contracts/data/*.json",
+  "py.typed",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
