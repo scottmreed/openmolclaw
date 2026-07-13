@@ -38,7 +38,7 @@ Confirm the package data actually shipped in the wheel:
 python - <<'PY'
 import glob, zipfile
 z = zipfile.ZipFile(glob.glob("dist/*.whl")[0])
-for pat in ("web/", "skills/", "contracts/data/", "py.typed"):
+for pat in ("web/", "skills/", "contracts/data/", "py.typed", ".dist-info/licenses/"):
     print(pat, sum(pat in n for n in z.namelist()))
 PY
 ```
@@ -70,7 +70,16 @@ Use a PyPI API token (`__token__` / `pypi-...`) via `~/.pypirc` or the
 
 - The `openmolclaw` package (`src/` layout).
 - Package data: `web/**`, `skills/**`, `contracts/data/*.json`, `py.typed`.
-- `LICENSE` and `NOTICE` (Apache-2.0, ChemIllusion attribution).
+- `LICENSE`, `NOTICE`, `THIRD_PARTY_NOTICES.md`, and `licenses/*` — the
+  project's own Apache-2.0 license plus upstream license text for
+  third-party components (RDKit, Flask, Ketcher). These are listed
+  explicitly via `license-files` in `pyproject.toml` (setuptools' default
+  `LICEN[CS]E*`/`NOTICE*` glob would otherwise silently drop
+  `THIRD_PARTY_NOTICES.md` and `licenses/`), so they land in the sdist and in
+  the wheel's `*.dist-info/licenses/`. See
+  [`../THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md) for what's covered
+  and why — add new entries there and to `license-files` together whenever a
+  new dependency or vendored component shows up.
 - Console entry point: `openmolclaw = openmolclaw.__main__:main`.
 
 Runtime dependencies: `rdkit`, `flask`, `pydantic`, `pyyaml`, `requests`. The

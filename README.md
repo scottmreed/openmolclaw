@@ -19,6 +19,8 @@ and teaching platform. OpenMolClaw is the open, local-first core: local RDKit
 chemistry plus an explicit provider interface for the model you choose. See
 [what the hosted product adds](docs/hosted.md).
 
+<img src="docs/images/openmolclaw-mascot.png" alt="The OpenMolClaw lobster mascot in a lab coat and safety goggles drawing a benzoic acid structure at a fume hood" width="760">
+
 ## Why not just use Claude Science?
 
 Claude Science is exciting because it provides a universal science AI workbench.
@@ -27,6 +29,8 @@ chemistry-agent harness, with the option of routing to locally hosted or
 OpenRouter-hosted open-weight models.
 
 ## Screenshots
+
+<img src="docs/images/openmolclaw-demo.gif" alt="OpenMolClaw demo showing the local Ketcher editor and chat panel in action" width="760">
 
 The local editor embeds Ketcher and uses RDKit-backed structure handling.
 

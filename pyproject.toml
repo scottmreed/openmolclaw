@@ -9,6 +9,10 @@ description = "An open, local-first chemistry agent harness for Ketcher, RDKit, 
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
+# Explicit so THIRD_PARTY_NOTICES.md and licenses/* ship in both the sdist and
+# the wheel's .dist-info/licenses/ — setuptools' default license-files glob
+# (LICEN[CS]E*, NOTICE*, ...) would otherwise silently drop them.
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md", "licenses/*"]
 keywords = [
   "chemistry",
   "rdkit",
